@@ -7,9 +7,9 @@ export default function ViewCard() {
   const { data: encoded } = router.query
 
   const cardData = useMemo(() => {
-    if (!encoded) return {}
+    if (!encoded || typeof encoded !== 'string') return {}
     try {
-      const json = Buffer.from(encoded, 'base64').toString()
+      const json = atob(encoded)
       return JSON.parse(json)
     } catch {
       return {}
@@ -17,7 +17,7 @@ export default function ViewCard() {
   }, [encoded])
 
   return (
-    <div className="p-4 flex justify-center">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
       <CardPreview data={cardData} />
     </div>
   )
