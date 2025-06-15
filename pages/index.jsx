@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
 import CardForm from '../components/CardForm'
 import CardPreview from '../components/CardPreview'
 import QRCodeDisplay from '../components/QRCodeDisplay'
@@ -18,6 +19,21 @@ export default function Home() {
 
   const cardRef = useRef(null)
   const [shareUrl, setShareUrl] = useState('')
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!router.isReady) return
+    const { data: encoded } = router.query
+    if (typeof encoded === 'string') {
+      try {
+        const json = atob(encoded)
+        const parsed = JSON.parse(json)
+        setData(parsed)
+      } catch {
+        // ignore invalid data
+      }
+    }
+  }, [router.isReady, router.query])
 
   useEffect(() => {
     const stored = localStorage.getItem('cardData')
@@ -26,7 +42,7 @@ export default function Home() {
 
   useEffect(() => {
     localStorage.setItem('cardData', JSON.stringify(data))
-    const encoded = Buffer.from(JSON.stringify(data)).toString('base64')
+    const encoded = btoa(JSON.stringify(data))
     if (typeof window !== 'undefined') {
       setShareUrl(`${window.location.origin}/card?data=${encoded}`)
     }
@@ -35,13 +51,18 @@ export default function Home() {
   const vcfString = generateVcf(data)
 
   return (
-    <div className="p-4 max-w-5xl mx-auto grid md:grid-cols-2 gap-6">
-      <div>
-        <h1 className="text-2xl font-bold mb-4">VCF Digital Name Card</h1>
+    <div className="p-4 sm:p-8 max-w-5xl mx-auto grid md:grid-cols-2 gap-6 items-start">
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow">
+        <h1 className="text-3xl font-extrabold mb-6 text-indigo-600 dark:text-indigo-400">VCF Digital Name Card</h1>
         <CardForm data={data} onChange={setData} />
         <div className="mt-4 space-x-2">
           {shareUrl && (
-            <a href={shareUrl} target="_blank" rel="noreferrer" className="text-blue-500 underline">
+            <a
+              href={shareUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="text-indigo-600 dark:text-indigo-400 underline hover:text-indigo-700 dark:hover:text-indigo-300 transition"
+            >
               Share Link
             </a>
           )}

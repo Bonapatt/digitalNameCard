@@ -26,14 +26,23 @@ export default function DownloadButtons({ data, cardRef, qrValue }) {
 
   return (
     <div className="space-x-2 mt-4">
-      <button onClick={downloadVcf} className="px-3 py-2 bg-blue-500 text-white rounded">
+      <button
+        onClick={downloadVcf}
+        className="px-3 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition"
+      >
         Download VCF
       </button>
-      <button onClick={downloadPng} className="px-3 py-2 bg-green-500 text-white rounded">
+      <button
+        onClick={downloadPng}
+        className="px-3 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600 transition"
+      >
         Download Card
       </button>
       {qrValue && (
-        <button onClick={downloadQr} className="px-3 py-2 bg-purple-500 text-white rounded">
+        <button
+          onClick={downloadQr}
+          className="px-3 py-2 bg-purple-500 text-white rounded shadow hover:bg-purple-600 transition"
+        >
           Download QR
         </button>
       )}
