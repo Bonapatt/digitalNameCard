@@ -1,19 +1,20 @@
+import { useRouter } from 'next/router'
 import { useMemo } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import CardPreview from '../components/CardPreview'
 
 export default function ViewCard() {
-  const [params] = useSearchParams()
+  const router = useRouter()
+  const { data: encoded } = router.query
+
   const cardData = useMemo(() => {
-    const encoded = params.get('data')
     if (!encoded) return {}
     try {
-      const json = atob(encoded)
+      const json = Buffer.from(encoded, 'base64').toString()
       return JSON.parse(json)
     } catch {
       return {}
     }
-  }, [params])
+  }, [encoded])
 
   return (
     <div className="p-4 flex justify-center">
