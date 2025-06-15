@@ -1,9 +1,10 @@
 import { toPng } from 'html-to-image'
 import { saveAs } from 'file-saver'
+import generateVcf from '../utils/vcfGenerator'
 
 export default function DownloadButtons({ data, cardRef, qrValue }) {
   const downloadVcf = () => {
-    const vcfContent = `BEGIN:VCARD\nVERSION:3.0\nFN:${data.name}\nTITLE:${data.title}\nORG:${data.company}\nTEL;TYPE=WORK,VOICE:${data.phone}\nEMAIL:${data.email}\nURL:${data.link}\nEND:VCARD`
+    const vcfContent = generateVcf(data)
     const blob = new Blob([vcfContent], { type: 'text/vcard;charset=utf-8' })
     saveAs(blob, `${data.name || 'contact'}.vcf`)
   }

@@ -5,6 +5,7 @@ import CardPreview from './components/CardPreview'
 import QRCodeDisplay from './components/QRCodeDisplay'
 import DownloadButtons from './components/DownloadButtons'
 import ViewCard from './pages/ViewCard'
+import generateVcf from './utils/vcfGenerator'
 import './App.css'
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
 
   const encodedData = btoa(JSON.stringify(data))
   const shareUrl = `${window.location.origin}/card?data=${encodedData}`
+  const vcfString = generateVcf(data)
 
   return (
     <BrowserRouter>
@@ -45,11 +47,11 @@ export default function App() {
                     Share Link
                   </a>
                 </div>
-                <DownloadButtons data={data} cardRef={cardRef} qrValue={shareUrl} />
+                <DownloadButtons data={data} cardRef={cardRef} qrValue={vcfString} />
               </div>
               <div className="flex flex-col items-center space-y-4">
                 <CardPreview data={data} refProp={cardRef} />
-                <QRCodeDisplay value={shareUrl} />
+                <QRCodeDisplay value={vcfString} />
               </div>
             </div>
           )}
